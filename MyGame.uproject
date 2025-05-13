@@ -1,25 +1,30 @@
 {
-	"FileVersion": 3,
-	"EngineAssociation": "{05C4908A-4C05-9004-01A6-77943ED60E40}",
-	"Category": "",
-	"Description": "",
-	"Modules": [
-		{
-			"Name": "MyGame",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		}
-	],
-	"Plugins": [
-		{
-			"Name": "ModelingToolsEditorMode",
-			"Enabled": true,
-			"TargetAllowList": [
-				"Editor"
-			]
-		},{
-			"Name": "GameplayAbilities",
-			"Enabled": true
-		}
-	]
+  "FileVersion": 3,
+  "EngineAssociation": "{29F7D075-4779-2C52-BB52-39A03EE2F8BB}",
+  "Category": "",
+  "Description": "",
+  "Modules": [
+    {
+      "Name": "MyGame",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "ModelingToolsEditorMode",
+      "Enabled": true,
+      "TargetAllowList": [
+        "Editor"
+      ]
+    },
+    {
+      "Name": "GameplayAbilities",
+      "Enabled": true
+    },
+    {
+      "Name": "StructUtils",
+      "Enabled": true
+    }
+  ]
 }
