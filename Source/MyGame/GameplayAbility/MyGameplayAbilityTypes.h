@@ -16,7 +16,12 @@ struct MYGAME_API FMyGameplayEffectContext : public FGameplayEffectContext
 	
 public:
 
-	virtual FGameplayAbilityTargetDataHandle GetTargetData()
+	virtual ~FMyGameplayEffectContext() override
+	{
+		TargetData.Clear();
+	}
+	
+	virtual FGameplayAbilityTargetDataHandle GetTargetData() const
 	{
 		return TargetData;
 	}
@@ -53,6 +58,7 @@ public:
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess) override;
 
 protected:
+	UPROPERTY()
 	FGameplayAbilityTargetDataHandle TargetData;
 };
 

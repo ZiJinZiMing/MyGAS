@@ -79,3 +79,4 @@ DerivedDataCache/*
 /.vs
 /.vscode
 /.idea
+/*.user

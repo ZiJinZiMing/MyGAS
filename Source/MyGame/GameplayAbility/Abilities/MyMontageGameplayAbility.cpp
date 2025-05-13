@@ -6,6 +6,7 @@
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "MyGame/GameplayAbility/MyGameplayAbilityTargetData.h"
+#include "MyGame/GameplayAbility/MyGameplayAbilityTypes.h"
 
 
 UMyMontageGameplayAbility::UMyMontageGameplayAbility()
@@ -24,7 +25,12 @@ void UMyMontageGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 		return;
 	}
 
-	const FGameplayAbilityTargetData_Montage* TargetData = static_cast<const FGameplayAbilityTargetData_Montage*>(TriggerEventData->TargetData.Get(0));
+	// const FGameplayAbilityTargetData_Montage* TargetData = static_cast<const FGameplayAbilityTargetData_Montage*>(TriggerEventData->TargetData.Get(0));
+
+	const FMyGameplayEffectContext* GEContext = static_cast<const FMyGameplayEffectContext*>(TriggerEventData->ContextHandle.Get());
+	FGameplayAbilityTargetData_Montage* TargetData = static_cast<FGameplayAbilityTargetData_Montage*>(GEContext->GetTargetData().Get(0));
+	// CurrentEventData = FGameplayEventData{};;
+
 	if (!TargetData)
 	{
 		K2_EndAbility();
@@ -46,11 +52,13 @@ void UMyMontageGameplayAbility::OnMontageEnded()
 
 void UMyMontageGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 	if (AbilityTask)
 	{
 		AbilityTask->EndTask();
 		AbilityTask = nullptr;
 	}
 	UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("MontageAbility End")));
+
+	
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

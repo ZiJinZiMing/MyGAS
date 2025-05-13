@@ -4,6 +4,7 @@
 #include "MyAbilitySystemComponent.h"
 
 #include "MyGameplayAbilityTargetData.h"
+#include "MyGameplayAbilityTypes.h"
 #include "Abilities/MyMontageGameplayAbility.h"
 
 
@@ -27,8 +28,12 @@ bool UMyAbilitySystemComponent::PlayMontageAbility(UAnimMontage* Montage, TSubcl
 			FGameplayEventData EventData;
 			FGameplayAbilityTargetData_Montage* TargetData = new FGameplayAbilityTargetData_Montage();
 			TargetData->Montage = Montage;
-			EventData.TargetData.Add(TargetData);
 
+			//一定要这样写，直接操作EventData.ContextHandle
+			EventData.ContextHandle = MakeEffectContext();
+			FMyGameplayEffectContext* MyGEContext = static_cast<FMyGameplayEffectContext*>(EventData.ContextHandle.Get());
+			MyGEContext->AddTargetData(TargetData);
+			
 			return InternalTryActivateAbility(Spec.Handle, ScopedPredictionKey, nullptr, nullptr, &EventData);
 		}
 	}
