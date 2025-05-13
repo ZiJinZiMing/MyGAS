@@ -6,6 +6,8 @@
 #include "MyGameplayAbilityTargetData.h"
 #include "MyGameplayAbilityTypes.h"
 #include "Abilities/MyMontageGameplayAbility.h"
+#include "Context/AbilityContext.h"
+#include "Context/ContextGameplayAbility.h"
 
 
 // Sets default values for this component's properties
@@ -29,6 +31,38 @@ bool UMyAbilitySystemComponent::PlayMontageAbility(UAnimMontage* Montage, TSubcl
 			FGameplayAbilityTargetData_Montage* TargetData = new FGameplayAbilityTargetData_Montage();
 			TargetData->Montage = Montage;
 
+			//一定要这样写，直接操作EventData.ContextHandle
+			EventData.ContextHandle = MakeEffectContext();
+			FMyGameplayEffectContext* MyGEContext = static_cast<FMyGameplayEffectContext*>(EventData.ContextHandle.Get());
+			MyGEContext->AddTargetData(TargetData);
+			
+			return InternalTryActivateAbility(Spec.Handle, ScopedPredictionKey, nullptr, nullptr, &EventData);
+		}
+	}
+	return false;
+}
+
+bool UMyAbilitySystemComponent::TryActivateContextAbility(const TInstancedStruct<FAbilityContext>& Payload)
+{
+	// FGameplayAbilitySpec* Spec = FindAbilitySpecFromHandle(Handle);
+	const FAbilityContext& AbilityContext = Payload.Get<FAbilityContext>();
+	UContextGameplayAbility* InAbilityCDO = AbilityContext.AbilityClass.GetDefaultObject();
+
+	for (const FGameplayAbilitySpec& Spec : ActivatableAbilities.Items)
+	{
+		if (Spec.Ability.Get() == InAbilityCDO)
+		{
+			// bSuccess |= TryActivateAbility(Spec.Handle, bAllowRemoteActivation);
+			FScopedPredictionWindow NewScopedWindow(this, true);
+
+			FGameplayEventData EventData;
+			FGameplayAbilityTargetData_AbilityContext* TargetData = new FGameplayAbilityTargetData_AbilityContext();
+			// TargetData->AbilityContext = Payload;
+			
+			// TargetData->AbilityContext = Payload.Get<FAbilityContext>();
+
+			TargetData->AbilityContext.InitializeAs(Payload.GetScriptStruct(),Payload.GetMemory()); 
+			
 			//一定要这样写，直接操作EventData.ContextHandle
 			EventData.ContextHandle = MakeEffectContext();
 			FMyGameplayEffectContext* MyGEContext = static_cast<FMyGameplayEffectContext*>(EventData.ContextHandle.Get());

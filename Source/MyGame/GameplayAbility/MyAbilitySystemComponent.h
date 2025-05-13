@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "Context/AbilityContext.h"
+#include "StructUtils/InstancedStruct.h"
 #include "MyAbilitySystemComponent.generated.h"
 
 
@@ -22,6 +24,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool PlayMontageAbility(UAnimMontage* Montage,TSubclassOf<UMyMontageGameplayAbility> MontageAbility);
 
+
+	UFUNCTION(BlueprintCallable, Category = "Context Ability System")
+	bool TryActivateContextAbility(const TInstancedStruct<FAbilityContext>& Payload);
 
 protected:
 	virtual void InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor) override;

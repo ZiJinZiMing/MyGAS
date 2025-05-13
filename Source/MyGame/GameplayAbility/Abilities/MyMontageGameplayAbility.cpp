@@ -29,7 +29,6 @@ void UMyMontageGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle
 
 	const FMyGameplayEffectContext* GEContext = static_cast<const FMyGameplayEffectContext*>(TriggerEventData->ContextHandle.Get());
 	FGameplayAbilityTargetData_Montage* TargetData = static_cast<FGameplayAbilityTargetData_Montage*>(GEContext->GetTargetData().Get(0));
-	// CurrentEventData = FGameplayEventData{};;
 
 	if (!TargetData)
 	{

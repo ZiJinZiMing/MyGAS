@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
+#include "MyGame/GameplayAbility/Context/AbilityContext.h"
+#include "StructUtils/InstancedStruct.h"
 #include "MyCharacter.generated.h"
 
 class UMyAbilitySystemComponent;
@@ -22,7 +24,8 @@ public:
 	TObjectPtr<UMyAbilitySystemComponent> AbilitySystemComponent;
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-
+	
+	
 protected:
 	//从PlayerState中初始化AbilitySystemComponent
 	virtual void PossessedBy(AController* NewController) override;
@@ -31,6 +34,12 @@ protected:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void OnAbilitySystemInitialized();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	TInstancedStruct<FAbilityContext> AbilityPayload;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	TInstancedStruct<FAbilityContext> AbilityPayload2;
 	
 private:
 	void InitAbilitySystem();
