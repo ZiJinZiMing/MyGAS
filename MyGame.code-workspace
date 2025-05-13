@@ -1,0 +1,635 @@
+{
+	"folders": [
+		{
+			"name": "MyGame",
+			"path": "."
+		},
+		{
+			"name": "UE5",
+			"path": "C:\\UnrealEngine\\UnrealEngine"
+		}
+	],
+	"settings": {
+		"typescript.tsc.autoDetect": "off",
+		"npm.autoDetect": "off",
+		"terminal.integrated.env.windows": {
+			"PATH": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Binaries\\ThirdParty\\DotNet\\8.0.300\\win-x64;${env:PATH}",
+			"DOTNET_ROOT": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Binaries\\ThirdParty\\DotNet\\8.0.300\\win-x64",
+			"DOTNET_HOST_PATH": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Binaries\\ThirdParty\\DotNet\\8.0.300\\win-x64\\dotnet.exe",
+			"DOTNET_MULTILEVEL_LOOKUP": "0",
+			"DOTNET_ROLL_FORWARD": "LatestMajor"
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.cpptools",
+			"ms-dotnettools.csharp"
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "MyGame Win64 Debug Build",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"Debug",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 Debug Rebuild",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"Debug",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"MyGame Win64 Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 Debug Clean",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"Debug",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 DebugGame Build",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"DebugGame",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"DebugGame",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"MyGame Win64 DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 DebugGame Clean",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"DebugGame",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 Development Build",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"Development",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 Development Rebuild",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"Development",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"MyGame Win64 Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 Development Clean",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"Development",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 Test Build",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"Test",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 Test Rebuild",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"Test",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"MyGame Win64 Test Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 Test Clean",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"Test",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 Shipping Build",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"Shipping",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 Shipping Rebuild",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"Shipping",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"MyGame Win64 Shipping Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGame Win64 Shipping Clean",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+				"args": [
+					"MyGame",
+					"Win64",
+					"Shipping",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGameEditor Win64 Debug Build",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGameEditor",
+					"Win64",
+					"Debug",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGameEditor Win64 Debug Rebuild",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGameEditor",
+					"Win64",
+					"Debug",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"MyGameEditor Win64 Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGameEditor Win64 Debug Clean",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+				"args": [
+					"MyGameEditor",
+					"Win64",
+					"Debug",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGameEditor Win64 DebugGame Build",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGameEditor",
+					"Win64",
+					"DebugGame",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGameEditor Win64 DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGameEditor",
+					"Win64",
+					"DebugGame",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"MyGameEditor Win64 DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGameEditor Win64 DebugGame Clean",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+				"args": [
+					"MyGameEditor",
+					"Win64",
+					"DebugGame",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGameEditor Win64 Development Build",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGameEditor",
+					"Win64",
+					"Development",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGameEditor Win64 Development Rebuild",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Build.bat",
+				"args": [
+					"MyGameEditor",
+					"Win64",
+					"Development",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"MyGameEditor Win64 Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"label": "MyGameEditor Win64 Development Clean",
+				"group": "build",
+				"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+				"args": [
+					"MyGameEditor",
+					"Win64",
+					"Development",
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			}
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Launch MyGame (Debug)",
+				"request": "launch",
+				"program": "C:\\WorkSpace\\MyGame\\Binaries\\Win64\\MyGame-Win64-Debug.exe",
+				"preLaunchTask": "MyGame Win64 Debug Build",
+				"args": [
+				],
+				"cwd": "C:\\UnrealEngine\\UnrealEngine",
+				"stopAtEntry": false,
+				"console": "integratedTerminal",
+				"type": "cppvsdbg",
+				"visualizerFile": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+				"sourceFileMap": {
+					"Z:\\UEVFS\\MyGame": "C:\\WorkSpace\\MyGame",
+					"Z:\\UEVFS\\Root": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"name": "Launch MyGame (DebugGame)",
+				"request": "launch",
+				"program": "C:\\WorkSpace\\MyGame\\Binaries\\Win64\\MyGame-Win64-DebugGame.exe",
+				"preLaunchTask": "MyGame Win64 DebugGame Build",
+				"args": [
+				],
+				"cwd": "C:\\UnrealEngine\\UnrealEngine",
+				"stopAtEntry": false,
+				"console": "integratedTerminal",
+				"type": "cppvsdbg",
+				"visualizerFile": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+				"sourceFileMap": {
+					"Z:\\UEVFS\\MyGame": "C:\\WorkSpace\\MyGame",
+					"Z:\\UEVFS\\Root": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"name": "Launch MyGame (Development)",
+				"request": "launch",
+				"program": "C:\\WorkSpace\\MyGame\\Binaries\\Win64\\MyGame.exe",
+				"preLaunchTask": "MyGame Win64 Development Build",
+				"args": [
+				],
+				"cwd": "C:\\UnrealEngine\\UnrealEngine",
+				"stopAtEntry": false,
+				"console": "integratedTerminal",
+				"type": "cppvsdbg",
+				"visualizerFile": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+				"sourceFileMap": {
+					"Z:\\UEVFS\\MyGame": "C:\\WorkSpace\\MyGame",
+					"Z:\\UEVFS\\Root": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"name": "Launch MyGame (Test)",
+				"request": "launch",
+				"program": "C:\\WorkSpace\\MyGame\\Binaries\\Win64\\MyGame-Win64-Test.exe",
+				"preLaunchTask": "MyGame Win64 Test Build",
+				"args": [
+				],
+				"cwd": "C:\\UnrealEngine\\UnrealEngine",
+				"stopAtEntry": false,
+				"console": "integratedTerminal",
+				"type": "cppvsdbg",
+				"visualizerFile": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+				"sourceFileMap": {
+					"Z:\\UEVFS\\MyGame": "C:\\WorkSpace\\MyGame",
+					"Z:\\UEVFS\\Root": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"name": "Launch MyGame (Shipping)",
+				"request": "launch",
+				"program": "C:\\WorkSpace\\MyGame\\Binaries\\Win64\\MyGame-Win64-Shipping.exe",
+				"preLaunchTask": "MyGame Win64 Shipping Build",
+				"args": [
+				],
+				"cwd": "C:\\UnrealEngine\\UnrealEngine",
+				"stopAtEntry": false,
+				"console": "integratedTerminal",
+				"type": "cppvsdbg",
+				"visualizerFile": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+				"sourceFileMap": {
+					"Z:\\UEVFS\\MyGame": "C:\\WorkSpace\\MyGame",
+					"Z:\\UEVFS\\Root": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"name": "Launch MyGameEditor (Debug)",
+				"request": "launch",
+				"program": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-Debug.exe",
+				"preLaunchTask": "MyGameEditor Win64 Debug Build",
+				"args": [
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject"
+				],
+				"cwd": "C:\\UnrealEngine\\UnrealEngine",
+				"stopAtEntry": false,
+				"console": "integratedTerminal",
+				"type": "cppvsdbg",
+				"visualizerFile": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+				"sourceFileMap": {
+					"Z:\\UEVFS\\MyGame": "C:\\WorkSpace\\MyGame",
+					"Z:\\UEVFS\\Root": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"name": "Launch MyGameEditor (DebugGame)",
+				"request": "launch",
+				"program": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-DebugGame.exe",
+				"preLaunchTask": "MyGameEditor Win64 DebugGame Build",
+				"args": [
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject"
+				],
+				"cwd": "C:\\UnrealEngine\\UnrealEngine",
+				"stopAtEntry": false,
+				"console": "integratedTerminal",
+				"type": "cppvsdbg",
+				"visualizerFile": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+				"sourceFileMap": {
+					"Z:\\UEVFS\\MyGame": "C:\\WorkSpace\\MyGame",
+					"Z:\\UEVFS\\Root": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"name": "Launch MyGameEditor (Development)",
+				"request": "launch",
+				"program": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+				"preLaunchTask": "MyGameEditor Win64 Development Build",
+				"args": [
+					"C:\\WorkSpace\\MyGame\\MyGame.uproject"
+				],
+				"cwd": "C:\\UnrealEngine\\UnrealEngine",
+				"stopAtEntry": false,
+				"console": "integratedTerminal",
+				"type": "cppvsdbg",
+				"visualizerFile": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+				"sourceFileMap": {
+					"Z:\\UEVFS\\MyGame": "C:\\WorkSpace\\MyGame",
+					"Z:\\UEVFS\\Root": "C:\\UnrealEngine\\UnrealEngine"
+				}
+			},
+			{
+				"name": "Generate Project Files",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": "UnrealBuildTool Win64 Development Build",
+				"program": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Build\\BatchFiles\\RunUBT.bat",
+				"args": [
+					"-projectfiles",
+					"-vscode",
+					"-project=C:\\WorkSpace\\MyGame\\MyGame.uproject",
+					"-game",
+					"-engine",
+					"-dotnet"
+				],
+				"env": {
+					"PATH": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Binaries\\ThirdParty\\DotNet\\8.0.300\\win-x64;${env:PATH}",
+					"DOTNET_ROOT": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Binaries\\ThirdParty\\DotNet\\8.0.300\\win-x64",
+					"DOTNET_HOST_PATH": "C:\\UnrealEngine\\UnrealEngine\\Engine\\Binaries\\ThirdParty\\DotNet\\8.0.300\\win-x64\\dotnet.exe",
+					"DOTNET_MULTILEVEL_LOOKUP": "0",
+					"DOTNET_ROLL_FORWARD": "LatestMajor"
+				},
+				"console": "integratedTerminal",
+				"stopAtEntry": false,
+				"cwd": "C:\\UnrealEngine\\UnrealEngine"
+			}
+		]
+	}
+}

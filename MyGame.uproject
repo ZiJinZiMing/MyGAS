@@ -1,0 +1,25 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{05C4908A-4C05-9004-01A6-77943ED60E40}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "MyGame",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		},{
+			"Name": "GameplayAbilities",
+			"Enabled": true
+		}
+	]
+}
