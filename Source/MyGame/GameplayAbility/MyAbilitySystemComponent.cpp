@@ -55,7 +55,6 @@ bool UMyAbilitySystemComponent::TryActivateContextAbility(const TInstancedStruct
 			// bSuccess |= TryActivateAbility(Spec.Handle, bAllowRemoteActivation);
 			FScopedPredictionWindow NewScopedWindow(this, true);
 
-			FGameplayEventData EventData;
 			FGameplayAbilityTargetData_AbilityContext* TargetData = new FGameplayAbilityTargetData_AbilityContext();
 			// TargetData->AbilityContext = Payload;
 			
@@ -64,6 +63,12 @@ bool UMyAbilitySystemComponent::TryActivateContextAbility(const TInstancedStruct
 			TargetData->AbilityContext.InitializeAs(Payload.GetScriptStruct(),Payload.GetMemory()); 
 			
 			//一定要这样写，直接操作EventData.ContextHandle
+			
+			FGameplayEventData EventData;
+			//写法一
+			// FGameplayEffectContextHandle GEContext = MakeEffectContext();
+			// EventData.ContextHandle = GEContext;
+			//写法二
 			EventData.ContextHandle = MakeEffectContext();
 			FMyGameplayEffectContext* MyGEContext = static_cast<FMyGameplayEffectContext*>(EventData.ContextHandle.Get());
 			MyGEContext->AddTargetData(TargetData);
