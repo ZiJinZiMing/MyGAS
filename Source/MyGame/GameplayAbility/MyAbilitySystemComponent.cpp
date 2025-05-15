@@ -8,6 +8,7 @@
 #include "Abilities/MyMontageGameplayAbility.h"
 #include "Context/AbilityContext.h"
 #include "Context/ContextGameplayAbility.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 // Sets default values for this component's properties
@@ -87,13 +88,19 @@ bool UMyAbilitySystemComponent::TryActivateAbilityByClassWithPayload(TSubclassOf
 	{
 		if (Spec.Ability.Get() == InAbilityCDO)
 		{
-			FScopedPredictionWindow NewScopedWindow(this, true);
+			// FScopedPredictionWindow NewScopedWindow(this, true);
 
 			return InternalTryActivateAbility(Spec.Handle, ScopedPredictionKey, nullptr, nullptr, &Payload);
 		}
 	}
 	return false;
 }
+
+void UMyAbilitySystemComponent::OnLocalPredictionAbilityRejected(FPredictionKey AbilityPredictionKey, UGameplayAbility* Ability)
+{
+	UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("OnLocalPredictionAbilityRejected||%s||%s"),*AbilityPredictionKey.ToString(),*UKismetSystemLibrary::GetDisplayName(Ability)));
+}
+
 
 void UMyAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor)
 {

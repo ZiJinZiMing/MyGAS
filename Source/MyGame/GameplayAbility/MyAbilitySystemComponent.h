@@ -29,6 +29,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	bool TryActivateAbilityByClassWithPayload(TSubclassOf<UGameplayAbility> InAbilityToActivate, FGameplayEventData Payload);
+
+	void OnLocalPredictionAbilityRejected(FPredictionKey AbilityPredictionKey,UGameplayAbility* Ability);
+	
 	
 protected:
 	virtual void InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor) override;

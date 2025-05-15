@@ -19,16 +19,18 @@ public:
 	UMyBaseGameplayAbility();
 
 	
-	// UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent)
 	void OnClientActivateAbilityRejected() const;
-	// virtual void OnClientActivateAbilityRejected_Implementation() const;
+	virtual void OnClientActivateAbilityRejected_Implementation() const;
 	
-	// UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent)
 	void OnClientActivateAbilityCaughtUp() const;
-	// virtual void OnClientActivateAbilityCaughtUp_Implementation() const;
+	virtual void OnClientActivateAbilityCaughtUp_Implementation() const;
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	                             const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+	
 	virtual void ConfirmActivateSucceed() override;
 
 	UFUNCTION(BlueprintImplementableEvent)

@@ -12,7 +12,7 @@ AMyPlayerState::AMyPlayerState(const FObjectInitializer& ObjectInitializer):Supe
 	AbilitySystemComponent = ObjectInitializer.CreateDefaultSubobject<UMyAbilitySystemComponent>(this,TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 	AbilitySystemComponent->SetIsReplicated(true);
-	SetNetUpdateFrequency(100.0f);
+	SetNetUpdateFrequency(10.0f);
 }
 
 UAbilitySystemComponent* AMyPlayerState::GetAbilitySystemComponent() const
