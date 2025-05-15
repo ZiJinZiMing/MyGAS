@@ -24,10 +24,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool PlayMontageAbility(UAnimMontage* Montage,TSubclassOf<UMyMontageGameplayAbility> MontageAbility);
 
-
 	UFUNCTION(BlueprintCallable, Category = "Context Ability System")
 	bool TryActivateContextAbility(const TInstancedStruct<FAbilityContext>& Payload);
 
+	UFUNCTION(BlueprintCallable, Category = "Abilities")
+	bool TryActivateAbilityByClassWithPayload(TSubclassOf<UGameplayAbility> InAbilityToActivate, FGameplayEventData Payload);
+	
 protected:
 	virtual void InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor) override;
 };

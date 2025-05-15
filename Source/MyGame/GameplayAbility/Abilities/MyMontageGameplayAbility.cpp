@@ -8,11 +8,10 @@
 #include "MyGame/GameplayAbility/MyGameplayAbilityTargetData.h"
 #include "MyGame/GameplayAbility/MyGameplayAbilityTypes.h"
 
-
 UMyMontageGameplayAbility::UMyMontageGameplayAbility()
+	: UMyBaseGameplayAbility()
+	, AbilityTask(nullptr)
 {
-	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalPredicted;
-	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }
 
 void UMyMontageGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)

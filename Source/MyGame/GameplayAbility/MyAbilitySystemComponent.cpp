@@ -79,6 +79,22 @@ bool UMyAbilitySystemComponent::TryActivateContextAbility(const TInstancedStruct
 	return false;
 }
 
+bool UMyAbilitySystemComponent::TryActivateAbilityByClassWithPayload(TSubclassOf<UGameplayAbility> InAbilityToActivate, FGameplayEventData Payload)
+{
+	UGameplayAbility* InAbilityCDO = InAbilityToActivate.GetDefaultObject();
+
+	for (const FGameplayAbilitySpec& Spec : ActivatableAbilities.Items)
+	{
+		if (Spec.Ability.Get() == InAbilityCDO)
+		{
+			FScopedPredictionWindow NewScopedWindow(this, true);
+
+			return InternalTryActivateAbility(Spec.Handle, ScopedPredictionKey, nullptr, nullptr, &Payload);
+		}
+	}
+	return false;
+}
+
 void UMyAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor)
 {
 	Super::InitAbilityActorInfo(InOwnerActor, InAvatarActor);

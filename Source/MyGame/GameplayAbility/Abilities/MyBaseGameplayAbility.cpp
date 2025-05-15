@@ -7,14 +7,31 @@
 
 UMyBaseGameplayAbility::UMyBaseGameplayAbility()
 {
-	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerExecution;
 	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalPredicted;
 }
 
 void UMyBaseGameplayAbility::OnClientActivateAbilityRejected() const
 {
-	UKismetSystemLibrary::PrintString(GetWorld(),TEXT("ClientActivateAbilityRejected"));
+	UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("OnClientActivateAbilityRejected: %s"),*GetName()));
 }
+
+void UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp() const
+{
+	UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("OnClientActivateAbilityCaughtUp: %s"),*GetName()));
+	
+}
+
+/*
+void UMyBaseGameplayAbility::OnClientActivateAbilityRejected_Implementation() const
+{
+	UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("OnClientActivateAbilityRejected: %s"),*GetName()));
+}
+
+void UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp_Implementation() const
+{
+	UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("OnClientActivateAbilityCaughtUp: %s"),*GetName()));
+}*/
 
 void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                              const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -23,12 +40,16 @@ void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	if (IsPredictingClient())
 	{
 		FPredictionKey ScopedPredictionKey = GetCurrentActivationInfo().GetActivationPredictionKey();
-		ScopedPredictionKey.NewRejectedDelegate().BindUObject(this, &ThisClass::OnClientActivateAbilityRejected);
+		UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("ActivateAbility: PredictionKey：%s"), *ScopedPredictionKey.ToString()));
+		
+		ScopedPredictionKey.NewRejectedDelegate().BindUObject(this, &UMyBaseGameplayAbility::OnClientActivateAbilityRejected);
+		ScopedPredictionKey.NewCaughtUpDelegate().BindUObject(this, &UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp);
 	}
 }
 
 void UMyBaseGameplayAbility::ConfirmActivateSucceed()
 {
 	Super::ConfirmActivateSucceed();
-	UKismetSystemLibrary::PrintString(GetWorld(),TEXT("ConfirmActivateSucceed"));
+	UKismetSystemLibrary::PrintString(this,TEXT("ConfirmActivateSucceed"));
+	OnConfirmActivateSucceed();
 }

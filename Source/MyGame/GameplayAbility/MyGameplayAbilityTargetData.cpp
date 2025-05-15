@@ -17,3 +17,11 @@ bool FGameplayAbilityTargetData_AbilityContext::NetSerialize(FArchive& Ar, class
 	AbilityContext.NetSerialize(Ar, Map, bOutSuccess);
 	return bOutSuccess;
 }
+
+bool FGameplayAbilityTargetData_ActionValidator::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
+{
+	bOutSuccess = true;
+	Ar << ActionIndex;
+	Ar << ActionStep;
+	return bOutSuccess;
+}

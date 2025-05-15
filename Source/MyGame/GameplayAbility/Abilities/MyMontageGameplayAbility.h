@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Abilities/GameplayAbility.h"
+#include "MyBaseGameplayAbility.h"
 #include "MyMontageGameplayAbility.generated.h"
 
 class UAbilityTask_PlayMontageAndWait;
@@ -11,13 +11,16 @@ class UAbilityTask_PlayMontageAndWait;
  * 
  */
 UCLASS()
-class MYGAME_API UMyMontageGameplayAbility : public UGameplayAbility
+class MYGAME_API UMyMontageGameplayAbility : public UMyBaseGameplayAbility
 {
 	GENERATED_BODY()
 
-	UMyMontageGameplayAbility();
 	
-protected:
+public:
+
+	UMyMontageGameplayAbility();
+
+	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 

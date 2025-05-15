@@ -10,7 +10,7 @@
 
 struct FAbilityContext;
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FGameplayAbilityTargetData_Montage : public FGameplayAbilityTargetData
 {
 	GENERATED_USTRUCT_BODY()
@@ -38,7 +38,7 @@ struct TStructOpsTypeTraits<FGameplayAbilityTargetData_Montage> : public TStruct
 };
 
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FGameplayAbilityTargetData_AbilityContext : public FGameplayAbilityTargetData
 {
 	GENERATED_USTRUCT_BODY()
@@ -65,3 +65,37 @@ struct TStructOpsTypeTraits<FGameplayAbilityTargetData_AbilityContext> : public 
 		WithNetSerializer = true // For now this is REQUIRED for FGameplayAbilityTargetDataHandle net serialization to work
 	};
 };
+
+
+USTRUCT(BlueprintType)
+struct FGameplayAbilityTargetData_ActionValidator : public FGameplayAbilityTargetData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int ActionIndex;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int ActionStep;
+
+	bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+
+	virtual UScriptStruct* GetScriptStruct() const override
+	{
+		return StaticStruct();
+	}
+};
+
+
+template <>
+struct TStructOpsTypeTraits<FGameplayAbilityTargetData_ActionValidator> : public TStructOpsTypeTraitsBase2<FGameplayAbilityTargetData_ActionValidator>
+{
+	enum
+	{
+		WithNetSerializer = true // For now this is REQUIRED for FGameplayAbilityTargetDataHandle net serialization to work
+	};
+};
+
+
+
+
