@@ -89,7 +89,8 @@ bool UMyAbilitySystemComponent::TryActivateAbilityByClassWithPayload(TSubclassOf
 	{
 		if (Spec.Ability.Get() == InAbilityCDO)
 		{
-			// FScopedPredictionWindow NewScopedWindow(this, true);
+			//保持和SendGameplayEventToActor中逻辑一致,
+			FScopedPredictionWindow NewScopedWindow(this, true);
 
 			return InternalTryActivateAbility(Spec.Handle, ScopedPredictionKey, nullptr, nullptr, &Payload);
 		}
