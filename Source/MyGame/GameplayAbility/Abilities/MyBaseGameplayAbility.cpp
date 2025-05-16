@@ -4,6 +4,7 @@
 #include "MyBaseGameplayAbility.h"
 
 #include "Kismet/KismetSystemLibrary.h"
+#include "MyGame/GameplayAbility/MyAbilityBlueprintFunctionLibrary.h"
 #include "MyGame/GameplayAbility/MyAbilitySystemComponent.h"
 
 UMyBaseGameplayAbility::UMyBaseGameplayAbility()
@@ -66,6 +67,38 @@ bool UMyBaseGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Hand
 	return Super::CommitAbility(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags);
 }
 
+void UMyBaseGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+{
+	Super::OnGiveAbility(ActorInfo, Spec);
+	//注册RejectCallback
+	// const FGameplayAbilityActorInfo* const CurrentActorInfoPtr = GetCurrentActorInfo();
+	
+	if (UMyAbilityBlueprintFunctionLibrary::IsForRemoteClient(*ActorInfo))
+	{
+		// AbilityFailedCallbacks
+		//todo:绑定AbilityFailedCallbacks回调，添加接口
+		
+	}
+	
+}
+
+bool UMyBaseGameplayAbility::ActorInfoIsForRemoteClient(const FGameplayAbilityActorInfo*ActorInfo)
+{
+	// const FGameplayAbilityActorInfo* const CurrentActorInfoPtr = GetCurrentActorInfo();
+	if (ActorInfo->OwnerActor.IsValid())
+	{
+		bool bIsLocallyControlled = ActorInfo->IsLocallyControlled();
+		bool bIsAuthority = ActorInfo->IsNetAuthority();
+
+		if (bIsAuthority && !bIsLocallyControlled)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void UMyBaseGameplayAbility::OnClientReceiveTargetData_Implementation(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag)
 {
 }
@@ -85,7 +118,6 @@ void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 			//InstancePerExecution的GA应该使用EndAbility作为结束
 			ScopedPredictionKey.NewRejectedDelegate().BindUObject(this, &UMyBaseGameplayAbility::OnClientActivateAbilityRejected);
 
-			ScopedPredictionKey.NewRejectedDelegate().BindUObject(ASC, &UMyAbilitySystemComponent::OnLocalPredictionAbilityRejected, ScopedPredictionKey, static_cast<UGameplayAbility*>(this));
 		}
 
 		ScopedPredictionKey.NewCaughtUpDelegate().BindUObject(this, &UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp);

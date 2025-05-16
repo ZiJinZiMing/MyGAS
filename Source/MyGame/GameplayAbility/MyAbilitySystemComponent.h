@@ -30,7 +30,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	bool TryActivateAbilityByClassWithPayload(TSubclassOf<UGameplayAbility> InAbilityToActivate, FGameplayEventData Payload);
 
-	void OnLocalPredictionAbilityRejected(FPredictionKey AbilityPredictionKey, UGameplayAbility* Ability);
 
 	
 	void CallClientSetReplicatedTargetData(FGameplayAbilitySpecHandle AbilityHandle, FPredictionKey AbilityOriginalPredictionKey, const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag, FPredictionKey CurrentPredictionKey);

@@ -7,6 +7,8 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "MyAbilityBlueprintFunctionLibrary.generated.h"
 
+struct FGameplayAbilityActorInfo;
+
 /**
  * 
  */
@@ -21,4 +23,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	static FGameplayAbilityTargetDataHandle MakeActionValidatorTargetData(int ActionIndex, int ActionStep);
+
+	UFUNCTION(BlueprintCallable)
+	static bool IsForRemoteClient(const FGameplayAbilityActorInfo& ActorInfo);
 };

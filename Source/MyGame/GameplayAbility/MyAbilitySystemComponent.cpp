@@ -98,11 +98,6 @@ bool UMyAbilitySystemComponent::TryActivateAbilityByClassWithPayload(TSubclassOf
 	return false;
 }
 
-void UMyAbilitySystemComponent::OnLocalPredictionAbilityRejected(FPredictionKey AbilityPredictionKey, UGameplayAbility* Ability)
-{
-	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("OnLocalPredictionAbilityRejected||%s||%s"), *AbilityPredictionKey.ToString(), *UKismetSystemLibrary::GetDisplayName(Ability)));
-}
-
 void UMyAbilitySystemComponent::CallClientSetReplicatedTargetData(FGameplayAbilitySpecHandle AbilityHandle, FPredictionKey AbilityOriginalPredictionKey, const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag, FPredictionKey CurrentPredictionKey)
 {
 	ClientSetReplicatedTargetData(AbilityHandle, AbilityOriginalPredictionKey, ReplicatedTargetDataHandle, ApplicationTag, CurrentPredictionKey);

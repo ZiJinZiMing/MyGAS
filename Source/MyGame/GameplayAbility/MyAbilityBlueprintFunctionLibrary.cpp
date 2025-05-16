@@ -3,6 +3,8 @@
 
 #include "MyAbilityBlueprintFunctionLibrary.h"
 
+#include "Abilities/GameplayAbilityTypes.h"
+
 bool UMyAbilityBlueprintFunctionLibrary::GetActionValidatorDataFromTargetData(FGameplayAbilityTargetDataHandle Handle, int& ActionIndex,
                                                                               int& ActionStep)
 {
@@ -21,4 +23,21 @@ FGameplayAbilityTargetDataHandle UMyAbilityBlueprintFunctionLibrary::MakeActionV
 	TargetData->ActionIndex = ActionIndex;
 	TargetData->ActionStep = ActionStep;
 	return FGameplayAbilityTargetDataHandle(TargetData);
+}
+
+bool UMyAbilityBlueprintFunctionLibrary::IsForRemoteClient(const FGameplayAbilityActorInfo& ActorInfo)
+{
+	// const FGameplayAbilityActorInfo* const CurrentActorInfoPtr = GetCurrentActorInfo();
+	if (ActorInfo.OwnerActor.IsValid())
+	{
+		bool bIsLocallyControlled = ActorInfo.IsLocallyControlled();
+		bool bIsAuthority = ActorInfo.IsNetAuthority();
+
+		if (bIsAuthority && !bIsLocallyControlled)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
