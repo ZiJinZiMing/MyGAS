@@ -63,12 +63,7 @@ void UMyBaseGameplayAbility::OnClientTargetDataReplicatedCallback(const FGamepla
 
 bool UMyBaseGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, FGameplayTagContainer* OptionalRelevantTags)
 {
-	if (Super::CommitAbility(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags))
-	{
-		return false;
-	}
-	
-	return true;
+	return Super::CommitAbility(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags);
 }
 
 void UMyBaseGameplayAbility::OnClientReceiveTargetData_Implementation(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag)
