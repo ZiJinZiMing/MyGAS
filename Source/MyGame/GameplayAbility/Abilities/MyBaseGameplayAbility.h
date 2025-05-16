@@ -21,7 +21,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	void SendClientTargetData(const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag);
 
-
 	UFUNCTION(BlueprintNativeEvent)
 	void OnClientActivateAbilityRejected() const;
 	virtual void OnClientActivateAbilityRejected_Implementation() const;
@@ -40,6 +39,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnConfirmActivateSucceed();
 
+	void OnClientTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag);
+
 	UFUNCTION(BlueprintNativeEvent)
-	void OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag);
+	void OnClientReceiveTargetData(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag);
+
+	
 };

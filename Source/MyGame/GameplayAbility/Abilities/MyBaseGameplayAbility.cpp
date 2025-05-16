@@ -45,7 +45,7 @@ void UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp_Implementation() co
 	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("OnClientActivateAbilityCaughtUp: %s"), *GetName()));
 }
 
-void UMyBaseGameplayAbility::OnTargetDataReplicatedCallback_Implementation(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag)
+void UMyBaseGameplayAbility::OnClientTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag)
 {
 	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("OnTargetDataReplicatedCallback::%s"), *GameplayTag.ToString()));
 
@@ -57,11 +57,12 @@ void UMyBaseGameplayAbility::OnTargetDataReplicatedCallback_Implementation(const
 		//consume targetdata
 		ASC->ConsumeClientReplicatedTargetData(GetCurrentAbilitySpecHandle(), ScopedPredictionKey);
 
-		
-		
+		OnClientReceiveTargetData(GameplayAbilityTargetDataHandle, GameplayTag);
 	}
-	
+}
 
+void UMyBaseGameplayAbility::OnClientReceiveTargetData_Implementation(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag)
+{
 }
 
 void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -86,7 +87,7 @@ void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 
 		//TargetDataDelegate
 		//Since multifire is supported, we still need to hook up the callbacks
-		ASC->AbilityTargetDataSetDelegate(Handle, ScopedPredictionKey).AddUObject(this, &ThisClass::OnTargetDataReplicatedCallback);
+		ASC->AbilityTargetDataSetDelegate(Handle, ScopedPredictionKey).AddUObject(this, &ThisClass::OnClientTargetDataReplicatedCallback);
 	}
 }
 
@@ -97,7 +98,6 @@ void UMyBaseGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
 	{
 		//dispose
 		UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("EndAbility: %s"), *GetName()));
-		
 	}
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
