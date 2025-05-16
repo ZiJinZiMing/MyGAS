@@ -3,6 +3,7 @@
 
 #include "MyAbilitySystemComponent.h"
 
+#include "AbilitySystemLog.h"
 #include "MyGameplayAbilityTargetData.h"
 #include "MyGameplayAbilityTypes.h"
 #include "Abilities/MyMontageGameplayAbility.h"
@@ -36,7 +37,7 @@ bool UMyAbilitySystemComponent::PlayMontageAbility(UAnimMontage* Montage, TSubcl
 			EventData.ContextHandle = MakeEffectContext();
 			FMyGameplayEffectContext* MyGEContext = static_cast<FMyGameplayEffectContext*>(EventData.ContextHandle.Get());
 			MyGEContext->AddTargetData(TargetData);
-			
+
 			return InternalTryActivateAbility(Spec.Handle, ScopedPredictionKey, nullptr, nullptr, &EventData);
 		}
 	}
@@ -58,13 +59,13 @@ bool UMyAbilitySystemComponent::TryActivateContextAbility(const TInstancedStruct
 
 			FGameplayAbilityTargetData_AbilityContext* TargetData = new FGameplayAbilityTargetData_AbilityContext();
 			// TargetData->AbilityContext = Payload;
-			
+
 			// TargetData->AbilityContext = Payload.Get<FAbilityContext>();
 
-			TargetData->AbilityContext.InitializeAs(Payload.GetScriptStruct(),Payload.GetMemory()); 
-			
+			TargetData->AbilityContext.InitializeAs(Payload.GetScriptStruct(), Payload.GetMemory());
+
 			//一定要这样写，直接操作EventData.ContextHandle
-			
+
 			FGameplayEventData EventData;
 			//写法一
 			// FGameplayEffectContextHandle GEContext = MakeEffectContext();
@@ -73,7 +74,7 @@ bool UMyAbilitySystemComponent::TryActivateContextAbility(const TInstancedStruct
 			EventData.ContextHandle = MakeEffectContext();
 			FMyGameplayEffectContext* MyGEContext = static_cast<FMyGameplayEffectContext*>(EventData.ContextHandle.Get());
 			MyGEContext->AddTargetData(TargetData);
-			
+
 			return InternalTryActivateAbility(Spec.Handle, ScopedPredictionKey, nullptr, nullptr, &EventData);
 		}
 	}
@@ -98,7 +99,52 @@ bool UMyAbilitySystemComponent::TryActivateAbilityByClassWithPayload(TSubclassOf
 
 void UMyAbilitySystemComponent::OnLocalPredictionAbilityRejected(FPredictionKey AbilityPredictionKey, UGameplayAbility* Ability)
 {
-	UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("OnLocalPredictionAbilityRejected||%s||%s"),*AbilityPredictionKey.ToString(),*UKismetSystemLibrary::GetDisplayName(Ability)));
+	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("OnLocalPredictionAbilityRejected||%s||%s"), *AbilityPredictionKey.ToString(), *UKismetSystemLibrary::GetDisplayName(Ability)));
+}
+
+void UMyAbilitySystemComponent::CallClientSetReplicatedTargetData(FGameplayAbilitySpecHandle AbilityHandle, FPredictionKey AbilityOriginalPredictionKey, const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag, FPredictionKey CurrentPredictionKey)
+{
+	ClientSetReplicatedTargetData(AbilityHandle, AbilityOriginalPredictionKey, ReplicatedTargetDataHandle, ApplicationTag, CurrentPredictionKey);
+}
+
+void UMyAbilitySystemComponent::ClientSetReplicatedTargetData_Implementation(FGameplayAbilitySpecHandle AbilityHandle, FPredictionKey AbilityOriginalPredictionKey, const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag, FPredictionKey CurrentPredictionKey)
+{
+	FScopedPredictionWindow ScopedPrediction(this, CurrentPredictionKey);
+
+	// Always adds to cache to store the new data
+	TSharedRef<FAbilityReplicatedDataCache> ReplicatedData = AbilityTargetDataMap.FindOrAdd(FGameplayAbilitySpecHandleAndPredictionKey(AbilityHandle, AbilityOriginalPredictionKey));
+
+	if (ReplicatedData->TargetData.Num() > 0)
+	{
+		FGameplayAbilitySpec* Spec = FindAbilitySpecFromHandle(AbilityHandle);
+		if (Spec && Spec->Ability)
+		{
+			// Can happen under normal circumstances if ServerForceClientTargetData is hit
+			ABILITY_LOG(Display, TEXT("Ability %s is overriding pending replicated target data."), *Spec->Ability->GetName());
+		}
+	}
+
+	ReplicatedData->TargetData = ReplicatedTargetDataHandle;
+	ReplicatedData->ApplicationTag = ApplicationTag;
+	ReplicatedData->bTargetConfirmed = true;
+	ReplicatedData->bTargetCancelled = false;
+	ReplicatedData->PredictionKey = CurrentPredictionKey;
+
+	ReplicatedData->TargetSetDelegate.Broadcast(ReplicatedTargetDataHandle, ReplicatedData->ApplicationTag);
+}
+
+bool UMyAbilitySystemComponent::ClientSetReplicatedTargetData_Validate(FGameplayAbilitySpecHandle AbilityHandle, FPredictionKey AbilityOriginalPredictionKey, const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag, FPredictionKey CurrentPredictionKey)
+{
+	// check the data coming from the client to ensure it's valid
+	for (const TSharedPtr<FGameplayAbilityTargetData>& TgtData : ReplicatedTargetDataHandle.Data)
+	{
+		if (!ensure(TgtData.IsValid()))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 

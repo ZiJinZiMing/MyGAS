@@ -14,26 +14,32 @@ class MYGAME_API UMyBaseGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
 
-
 public:
 	UMyBaseGameplayAbility();
 
-	
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+	void SendClientTargetData(const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag);
+
+
 	UFUNCTION(BlueprintNativeEvent)
 	void OnClientActivateAbilityRejected() const;
 	virtual void OnClientActivateAbilityRejected_Implementation() const;
-	
+
 	UFUNCTION(BlueprintNativeEvent)
 	void OnClientActivateAbilityCaughtUp() const;
 	virtual void OnClientActivateAbilityCaughtUp_Implementation() const;
+
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	                             const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
-	
+
 	virtual void ConfirmActivateSucceed() override;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnConfirmActivateSucceed();
 
+	UFUNCTION(BlueprintNativeEvent)
+	void OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag);
 };

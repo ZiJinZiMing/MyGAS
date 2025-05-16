@@ -12,6 +12,17 @@ UMyBaseGameplayAbility::UMyBaseGameplayAbility()
 	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalPredicted;
 }
 
+void UMyBaseGameplayAbility::SendClientTargetData(const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag)
+{
+	const FGameplayAbilityActivationInfo& ActivationInfo = GetCurrentActivationInfo();
+	FPredictionKey ScopedPredictionKey = ActivationInfo.GetActivationPredictionKey();
+	if (!HasAuthorityOrPredictionKey(GetCurrentActorInfo(), &ActivationInfo)) return;
+	if (UMyAbilitySystemComponent* ASC = Cast<UMyAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo()))
+	{
+		ASC->CallClientSetReplicatedTargetData(GetCurrentAbilitySpecHandle(), ScopedPredictionKey, ReplicatedTargetDataHandle, ApplicationTag, ScopedPredictionKey);
+	}
+}
+
 /*
 void UMyBaseGameplayAbility::OnClientActivateAbilityRejected() const
 {
@@ -26,12 +37,31 @@ void UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp() const
 
 void UMyBaseGameplayAbility::OnClientActivateAbilityRejected_Implementation() const
 {
-	UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("OnClientActivateAbilityRejected: %s"),*GetName()));
+	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("OnClientActivateAbilityRejected: %s"), *GetName()));
 }
 
 void UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp_Implementation() const
 {
-	UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("OnClientActivateAbilityCaughtUp: %s"),*GetName()));
+	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("OnClientActivateAbilityCaughtUp: %s"), *GetName()));
+}
+
+void UMyBaseGameplayAbility::OnTargetDataReplicatedCallback_Implementation(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag)
+{
+	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("OnTargetDataReplicatedCallback::%s"), *GameplayTag.ToString()));
+
+	if (UMyAbilitySystemComponent* ASC = Cast<UMyAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo()))
+	{
+		const FGameplayAbilityActivationInfo& ActivationInfo = GetCurrentActivationInfo();
+		FPredictionKey ScopedPredictionKey = ActivationInfo.GetActivationPredictionKey();
+
+		//consume targetdata
+		ASC->ConsumeClientReplicatedTargetData(GetCurrentAbilitySpecHandle(), ScopedPredictionKey);
+
+		
+		
+	}
+	
+
 }
 
 void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -42,8 +72,8 @@ void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	{
 		FPredictionKey ScopedPredictionKey = GetCurrentActivationInfo().GetActivationPredictionKey();
 		UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("ActivateAbility: PredictionKey：%s"), *ScopedPredictionKey.ToString()));
-
-		if (UMyAbilitySystemComponent* ASC = Cast<UMyAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo()))
+		UMyAbilitySystemComponent* ASC = Cast<UMyAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo());
+		if (ASC)
 		{
 			//InstancedPerExecution的GA会无法触发OnClientActivateAbilityRejected，因为当Reject下发时，GA已经被标记为Garbage
 			//InstancePerExecution的GA应该使用EndAbility作为结束
@@ -53,16 +83,21 @@ void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 		}
 
 		ScopedPredictionKey.NewCaughtUpDelegate().BindUObject(this, &UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp);
+
+		//TargetDataDelegate
+		//Since multifire is supported, we still need to hook up the callbacks
+		ASC->AbilityTargetDataSetDelegate(Handle, ScopedPredictionKey).AddUObject(this, &ThisClass::OnTargetDataReplicatedCallback);
 	}
 }
-
 
 
 void UMyBaseGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	if (IsEndAbilityValid(Handle, ActorInfo))
 	{
+		//dispose
 		UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("EndAbility: %s"), *GetName()));
+		
 	}
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

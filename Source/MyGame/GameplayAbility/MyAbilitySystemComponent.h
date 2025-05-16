@@ -22,7 +22,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	bool PlayMontageAbility(UAnimMontage* Montage,TSubclassOf<UMyMontageGameplayAbility> MontageAbility);
+	bool PlayMontageAbility(UAnimMontage* Montage, TSubclassOf<UMyMontageGameplayAbility> MontageAbility);
 
 	UFUNCTION(BlueprintCallable, Category = "Context Ability System")
 	bool TryActivateContextAbility(const TInstancedStruct<FAbilityContext>& Payload);
@@ -30,9 +30,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	bool TryActivateAbilityByClassWithPayload(TSubclassOf<UGameplayAbility> InAbilityToActivate, FGameplayEventData Payload);
 
-	void OnLocalPredictionAbilityRejected(FPredictionKey AbilityPredictionKey,UGameplayAbility* Ability);
+	void OnLocalPredictionAbilityRejected(FPredictionKey AbilityPredictionKey, UGameplayAbility* Ability);
+
 	
-	
+	void CallClientSetReplicatedTargetData(FGameplayAbilitySpecHandle AbilityHandle, FPredictionKey AbilityOriginalPredictionKey, const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag, FPredictionKey CurrentPredictionKey);
+
+	/** Replicates targeting data to the server */
+	UFUNCTION(Client, reliable, WithValidation)
+	void ClientSetReplicatedTargetData(FGameplayAbilitySpecHandle AbilityHandle, FPredictionKey AbilityOriginalPredictionKey, const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag, FPredictionKey CurrentPredictionKey);
+
 protected:
 	virtual void InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor) override;
 };
