@@ -25,20 +25,9 @@ void UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp_Implementation() co
 }
 
 
-bool UMyBaseGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, FGameplayTagContainer* OptionalRelevantTags)
-{
-	return Super::CommitAbility(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags);
-}
-
 void UMyBaseGameplayAbility::OnActivateAbilityRejected_Implementation(const FGameplayAbilityActorInfo& ActorInfo, const FGameplayEventData& EventData)
 {
 }
-
-void UMyBaseGameplayAbility::OnAbilityFailed_Implementation(const FGameplayAbilitySpecHandle Handle, const FGameplayTagContainer& FailureReason)
-{
-	
-}
-
 
 void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                              const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -48,25 +37,12 @@ void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	{
 		FPredictionKey ScopedPredictionKey = GetCurrentActivationInfo().GetActivationPredictionKey();
 		UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("ActivateAbility: PredictionKey：%s"), *ScopedPredictionKey.ToString()));
-		//InstancedPerExecution的GA会无法触发OnClientActivateAbilityRejected，因为当Reject下发时，GA已经被标记为Garbage
 		ScopedPredictionKey.NewRejectedDelegate().BindUObject(this, &UMyBaseGameplayAbility::OnClientActivateAbilityRejected);
 		ScopedPredictionKey.NewCaughtUpDelegate().BindUObject(this, &UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp);
 	}
 }
 
 
-void UMyBaseGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
-{
-	if (IsEndAbilityValid(Handle, ActorInfo))
-	{
-		//dispose
-		UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("EndAbility: %s"), *GetName()));
-	}
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-}
 
-void UMyBaseGameplayAbility::ConfirmActivateSucceed()
-{
-	Super::ConfirmActivateSucceed();
-	UKismetSystemLibrary::PrintString(this,TEXT("ConfirmActivateSucceed"));
-}
+
+

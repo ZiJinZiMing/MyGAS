@@ -7,7 +7,7 @@
 #include "AbilitySystemStats.h"
 #include "MyGameplayAbilityTargetData.h"
 #include "MyGameplayAbilityTypes.h"
-#include "Abilities/MyMontageGameplayAbility.h"
+#include "Abilities/MyBaseGameplayAbility.h"
 #include "Context/AbilityContext.h"
 #include "Context/ContextGameplayAbility.h"
 
@@ -28,32 +28,6 @@ UMyAbilitySystemComponent::UMyAbilitySystemComponent()
 {
 }
 
-bool UMyAbilitySystemComponent::PlayMontageAbility(UAnimMontage* Montage, TSubclassOf<UMyMontageGameplayAbility> MontageAbility)
-{
-	// FGameplayAbilitySpec* Spec = FindAbilitySpecFromHandle(Handle);
-	UMyMontageGameplayAbility* InAbilityCDO = MontageAbility.GetDefaultObject();
-
-	for (const FGameplayAbilitySpec& Spec : ActivatableAbilities.Items)
-	{
-		if (Spec.Ability == InAbilityCDO)
-		{
-			// bSuccess |= TryActivateAbility(Spec.Handle, bAllowRemoteActivation);
-			FScopedPredictionWindow NewScopedWindow(this, true);
-
-			FGameplayEventData EventData;
-			FGameplayAbilityTargetData_Montage* TargetData = new FGameplayAbilityTargetData_Montage();
-			TargetData->Montage = Montage;
-
-			//一定要这样写，直接操作EventData.ContextHandle
-			EventData.ContextHandle = MakeEffectContext();
-			FMyGameplayEffectContext* MyGEContext = static_cast<FMyGameplayEffectContext*>(EventData.ContextHandle.Get());
-			MyGEContext->AddTargetData(TargetData);
-
-			return InternalTryActivateAbility(Spec.Handle, ScopedPredictionKey, nullptr, nullptr, &EventData);
-		}
-	}
-	return false;
-}
 
 void UMyAbilitySystemComponent::InternalServerTryActivateAbility(FGameplayAbilitySpecHandle Handle, bool InputPressed, const FPredictionKey& PredictionKey, const FGameplayEventData* TriggerEventData)
 {
@@ -220,8 +194,8 @@ bool UMyAbilitySystemComponent::TryActivateAbilityByClassWithTargetData(TSubclas
 			//保持和SendGameplayEventToActor中逻辑一致,
 			FScopedPredictionWindow NewScopedWindow(this, true);
 			FGameplayEventData EventData;
-			// EventData.EventTag = UE::MyGAS::Tag_TryActivateAbility;
-			EventData.EventTag = FGameplayTag::EmptyTag;
+			EventData.EventTag = UE::MyGAS::Tag_TryActivateAbility;
+			// EventData.EventTag = FGameplayTag::EmptyTag;
 			EventData.TargetData = TargetData;
 			return InternalTryActivateAbility(Spec.Handle, ScopedPredictionKey, nullptr, nullptr, &EventData);
 		}
@@ -229,38 +203,8 @@ bool UMyAbilitySystemComponent::TryActivateAbilityByClassWithTargetData(TSubclas
 	return false;
 }
 
-
-void UMyAbilitySystemComponent::NotifyAbilityFailed(const FGameplayAbilitySpecHandle Handle, UGameplayAbility* Ability, const FGameplayTagContainer& FailureReason)
-{
-	Super::NotifyAbilityFailed(Handle, Ability, FailureReason);
-
-	if (auto BaseAbility = Cast<UMyBaseGameplayAbility>(Ability))
-	{
-		BaseAbility->OnAbilityFailed(Handle, FailureReason);
-	}
-}
-
-void UMyAbilitySystemComponent::NotifyAbilityActivated(const FGameplayAbilitySpecHandle Handle, UGameplayAbility* Ability)
-{
-	Super::NotifyAbilityActivated(Handle, Ability);
-}
-
-void UMyAbilitySystemComponent::NotifyAbilityCommit(UGameplayAbility* Ability)
-{
-	Super::NotifyAbilityCommit(Ability);
-}
-
-void UMyAbilitySystemComponent::NotifyAbilityEnded(FGameplayAbilitySpecHandle Handle, UGameplayAbility* Ability, bool bWasCancelled)
-{
-	Super::NotifyAbilityEnded(Handle, Ability, bWasCancelled);
-}
-
-void UMyAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor)
-{
-	Super::InitAbilityActorInfo(InOwnerActor, InAvatarActor);
-}
-
 void UMyAbilitySystemComponent::ClientActivateAbilitySucceedWithEventData_Implementation(FGameplayAbilitySpecHandle AbilityToActivate, FPredictionKey PredictionKey, FGameplayEventData TriggerEventData)
 {
 	Super::ClientActivateAbilitySucceedWithEventData_Implementation(AbilityToActivate, PredictionKey, TriggerEventData);
 }
+

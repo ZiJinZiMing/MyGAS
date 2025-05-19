@@ -10,33 +10,6 @@
 
 struct FAbilityContext;
 
-USTRUCT(BlueprintType)
-struct FGameplayAbilityTargetData_Montage : public FGameplayAbilityTargetData
-{
-	GENERATED_USTRUCT_BODY()
-
-
-	UPROPERTY()
-	TObjectPtr<UAnimMontage> Montage;
-
-	bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
-
-	virtual UScriptStruct* GetScriptStruct() const override
-	{
-		return StaticStruct();
-	}
-};
-
-
-template <>
-struct TStructOpsTypeTraits<FGameplayAbilityTargetData_Montage> : public TStructOpsTypeTraitsBase2<FGameplayAbilityTargetData_Montage>
-{
-	enum
-	{
-		WithNetSerializer = true // For now this is REQUIRED for FGameplayAbilityTargetDataHandle net serialization to work
-	};
-};
-
 
 USTRUCT(BlueprintType)
 struct FGameplayAbilityTargetData_AbilityContext : public FGameplayAbilityTargetData

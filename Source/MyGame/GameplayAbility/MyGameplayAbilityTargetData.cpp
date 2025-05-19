@@ -3,13 +3,6 @@
 
 #include "MyGameplayAbilityTargetData.h"
 
-bool FGameplayAbilityTargetData_Montage::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
-{
-	bOutSuccess = true;
-	Ar << Montage;
-	return bOutSuccess;
-}
-
 bool FGameplayAbilityTargetData_AbilityContext::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
 {
 	bOutSuccess = true;

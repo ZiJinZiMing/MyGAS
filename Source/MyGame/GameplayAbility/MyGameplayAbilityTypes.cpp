@@ -19,6 +19,7 @@ namespace UE::MyGAS
 		{
 			UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
 			Tag_TryActivateAbility = Manager.AddNativeGameplayTag(TEXT("Ability.TryActivateAbility"));
+			// Manager.OnFilterGameplayTag
 		}
 
 		static const FNativeGameplayTags& Get()
