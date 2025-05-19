@@ -8,6 +8,12 @@
 #include "MyGameplayAbilityTypes.generated.h"
 
 
+
+namespace UE::MyGAS
+{
+	MYGAME_API extern FGameplayTag Tag_TryActivateAbility;
+}
+
 USTRUCT()
 struct MYGAME_API FMyGameplayEffectContext : public FGameplayEffectContext
 {

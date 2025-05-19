@@ -13,28 +13,6 @@ UMyBaseGameplayAbility::UMyBaseGameplayAbility()
 	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalPredicted;
 }
 
-void UMyBaseGameplayAbility::SendClientTargetData(const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag)
-{
-	const FGameplayAbilityActivationInfo& ActivationInfo = GetCurrentActivationInfo();
-	FPredictionKey ScopedPredictionKey = ActivationInfo.GetActivationPredictionKey();
-	if (!HasAuthorityOrPredictionKey(GetCurrentActorInfo(), &ActivationInfo)) return;
-	if (UMyAbilitySystemComponent* ASC = Cast<UMyAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo()))
-	{
-		ASC->CallClientSetReplicatedTargetData(GetCurrentAbilitySpecHandle(), ScopedPredictionKey, ReplicatedTargetDataHandle, ApplicationTag, ScopedPredictionKey);
-	}
-}
-
-/*
-void UMyBaseGameplayAbility::OnClientActivateAbilityRejected() const
-{
-	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("OnClientActivateAbilityRejected: %s"), *GetName()));
-}
-
-void UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp() const
-{
-	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("OnClientActivateAbilityCaughtUp: %s"), *GetName()));
-}
-*/
 
 void UMyBaseGameplayAbility::OnClientActivateAbilityRejected_Implementation() const
 {
@@ -46,62 +24,21 @@ void UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp_Implementation() co
 	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("OnClientActivateAbilityCaughtUp: %s"), *GetName()));
 }
 
-void UMyBaseGameplayAbility::OnClientTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag)
-{
-	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("OnTargetDataReplicatedCallback::%s"), *GameplayTag.ToString()));
-
-	if (UMyAbilitySystemComponent* ASC = Cast<UMyAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo()))
-	{
-		const FGameplayAbilityActivationInfo& ActivationInfo = GetCurrentActivationInfo();
-		FPredictionKey ScopedPredictionKey = ActivationInfo.GetActivationPredictionKey();
-
-		//consume targetdata
-		ASC->ConsumeClientReplicatedTargetData(GetCurrentAbilitySpecHandle(), ScopedPredictionKey);
-
-		OnClientReceiveTargetData(GameplayAbilityTargetDataHandle, GameplayTag);
-	}
-}
 
 bool UMyBaseGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, FGameplayTagContainer* OptionalRelevantTags)
 {
 	return Super::CommitAbility(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags);
 }
 
-void UMyBaseGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+void UMyBaseGameplayAbility::OnActivateAbilityRejected_Implementation(const FGameplayAbilityActorInfo& ActorInfo, const FGameplayEventData& EventData)
 {
-	Super::OnGiveAbility(ActorInfo, Spec);
-	//注册RejectCallback
-	// const FGameplayAbilityActorInfo* const CurrentActorInfoPtr = GetCurrentActorInfo();
-	
-	if (UMyAbilityBlueprintFunctionLibrary::IsForRemoteClient(*ActorInfo))
-	{
-		// AbilityFailedCallbacks
-		//todo:绑定AbilityFailedCallbacks回调，添加接口
-		
-	}
+}
+
+void UMyBaseGameplayAbility::OnAbilityFailed_Implementation(const FGameplayAbilitySpecHandle Handle, const FGameplayTagContainer& FailureReason)
+{
 	
 }
 
-bool UMyBaseGameplayAbility::ActorInfoIsForRemoteClient(const FGameplayAbilityActorInfo*ActorInfo)
-{
-	// const FGameplayAbilityActorInfo* const CurrentActorInfoPtr = GetCurrentActorInfo();
-	if (ActorInfo->OwnerActor.IsValid())
-	{
-		bool bIsLocallyControlled = ActorInfo->IsLocallyControlled();
-		bool bIsAuthority = ActorInfo->IsNetAuthority();
-
-		if (bIsAuthority && !bIsLocallyControlled)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-void UMyBaseGameplayAbility::OnClientReceiveTargetData_Implementation(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag)
-{
-}
 
 void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                              const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -111,20 +48,9 @@ void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	{
 		FPredictionKey ScopedPredictionKey = GetCurrentActivationInfo().GetActivationPredictionKey();
 		UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("ActivateAbility: PredictionKey：%s"), *ScopedPredictionKey.ToString()));
-		UMyAbilitySystemComponent* ASC = Cast<UMyAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo());
-		if (ASC)
-		{
-			//InstancedPerExecution的GA会无法触发OnClientActivateAbilityRejected，因为当Reject下发时，GA已经被标记为Garbage
-			//InstancePerExecution的GA应该使用EndAbility作为结束
-			ScopedPredictionKey.NewRejectedDelegate().BindUObject(this, &UMyBaseGameplayAbility::OnClientActivateAbilityRejected);
-
-		}
-
+		//InstancedPerExecution的GA会无法触发OnClientActivateAbilityRejected，因为当Reject下发时，GA已经被标记为Garbage
+		ScopedPredictionKey.NewRejectedDelegate().BindUObject(this, &UMyBaseGameplayAbility::OnClientActivateAbilityRejected);
 		ScopedPredictionKey.NewCaughtUpDelegate().BindUObject(this, &UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp);
-
-		//TargetDataDelegate
-		//Since multifire is supported, we still need to hook up the callbacks
-		ASC->AbilityTargetDataSetDelegate(Handle, ScopedPredictionKey).AddUObject(this, &ThisClass::OnClientTargetDataReplicatedCallback);
 	}
 }
 
@@ -143,5 +69,4 @@ void UMyBaseGameplayAbility::ConfirmActivateSucceed()
 {
 	Super::ConfirmActivateSucceed();
 	UKismetSystemLibrary::PrintString(this,TEXT("ConfirmActivateSucceed"));
-	OnConfirmActivateSucceed();
 }

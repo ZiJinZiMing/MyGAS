@@ -21,8 +21,6 @@ public:
 	UMyAbilitySystemComponent();
 
 public:
-	UFUNCTION(BlueprintCallable)
-	bool PlayMontageAbility(UAnimMontage* Montage, TSubclassOf<UMyMontageGameplayAbility> MontageAbility);
 
 	UFUNCTION(BlueprintCallable, Category = "Context Ability System")
 	bool TryActivateContextAbility(const TInstancedStruct<FAbilityContext>& Payload);
@@ -30,14 +28,31 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	bool TryActivateAbilityByClassWithPayload(TSubclassOf<UGameplayAbility> InAbilityToActivate, FGameplayEventData Payload);
 
+	UFUNCTION(BlueprintCallable, Category = "Abilities")
+	bool TryActivateAbilityByClassWithTargetData(TSubclassOf<UGameplayAbility> InAbilityToActivate, const FGameplayAbilityTargetDataHandle& TargetData);
 
+
+public:
 	
-	void CallClientSetReplicatedTargetData(FGameplayAbilitySpecHandle AbilityHandle, FPredictionKey AbilityOriginalPredictionKey, const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag, FPredictionKey CurrentPredictionKey);
-
-	/** Replicates targeting data to the server */
-	UFUNCTION(Client, reliable, WithValidation)
-	void ClientSetReplicatedTargetData(FGameplayAbilitySpecHandle AbilityHandle, FPredictionKey AbilityOriginalPredictionKey, const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag, FPredictionKey CurrentPredictionKey);
+	UFUNCTION(BlueprintCallable)
+	bool PlayMontageAbility(UAnimMontage* Montage, TSubclassOf<UMyMontageGameplayAbility> MontageAbility);
 
 protected:
+	/** Implementation of ServerTryActivateAbility */
+	virtual void InternalServerTryActivateAbility(FGameplayAbilitySpecHandle AbilityToActivate, bool InputPressed, const FPredictionKey& PredictionKey, const FGameplayEventData* TriggerEventData) override;
+
+	//processing for ability rejected
+	void ServerTryActivateAbilityRejected(FGameplayAbilitySpecHandle Handle, const FGameplayEventData* EventData);
+
+	virtual void NotifyAbilityFailed(const FGameplayAbilitySpecHandle Handle, UGameplayAbility* Ability, const FGameplayTagContainer& FailureReason) override;
+
+	virtual void NotifyAbilityActivated(const FGameplayAbilitySpecHandle Handle, UGameplayAbility* Ability) override;
+
+	virtual void NotifyAbilityCommit(UGameplayAbility* Ability) override;
+
+	virtual void NotifyAbilityEnded(FGameplayAbilitySpecHandle Handle, UGameplayAbility* Ability, bool bWasCancelled) override;
+
 	virtual void InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor) override;
+
+	virtual void ClientActivateAbilitySucceedWithEventData_Implementation(FGameplayAbilitySpecHandle AbilityToActivate, FPredictionKey PredictionKey, FGameplayEventData TriggerEventData) override;
 };

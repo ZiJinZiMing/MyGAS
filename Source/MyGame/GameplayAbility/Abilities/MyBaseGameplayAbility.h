@@ -17,10 +17,6 @@ class MYGAME_API UMyBaseGameplayAbility : public UGameplayAbility
 public:
 	UMyBaseGameplayAbility();
 
-
-	UFUNCTION(BlueprintCallable, Category = "Ability")
-	void SendClientTargetData(const FGameplayAbilityTargetDataHandle& ReplicatedTargetDataHandle, FGameplayTag ApplicationTag);
-
 	UFUNCTION(BlueprintNativeEvent)
 	void OnClientActivateAbilityRejected() const;
 	virtual void OnClientActivateAbilityRejected_Implementation() const;
@@ -36,18 +32,12 @@ public:
 
 	virtual void ConfirmActivateSucceed() override;
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnConfirmActivateSucceed();
-
-	void OnClientTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void OnClientReceiveTargetData(const FGameplayAbilityTargetDataHandle& GameplayAbilityTargetDataHandle, FGameplayTag GameplayTag);
-
 	virtual bool CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, FGameplayTagContainer* OptionalRelevantTags = nullptr) override;
 
-	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 
-	static bool ActorInfoIsForRemoteClient(const FGameplayAbilityActorInfo* ActorInfo);
-	
+	UFUNCTION(BlueprintNativeEvent)
+	void OnAbilityFailed(const FGameplayAbilitySpecHandle Handle,  const FGameplayTagContainer& FailureReason);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnActivateAbilityRejected(const FGameplayAbilityActorInfo& ActorInfo, const FGameplayEventData& EventData);
 };
