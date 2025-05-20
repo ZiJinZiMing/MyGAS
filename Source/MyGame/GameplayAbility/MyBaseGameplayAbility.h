@@ -29,6 +29,8 @@ public:
 	                             const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 
-	UFUNCTION(BlueprintNativeEvent)
+	virtual void ActivateAbilityRejected(const FGameplayAbilityActorInfo& ActorInfo, const FGameplayEventData& EventData,const FPredictionKey& PredictionKey);
+	
+	UFUNCTION(BlueprintImplementableEvent)
 	void OnActivateAbilityRejected(const FGameplayAbilityActorInfo& ActorInfo, const FGameplayEventData& EventData);
 };

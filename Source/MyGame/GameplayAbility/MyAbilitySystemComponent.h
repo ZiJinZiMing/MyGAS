@@ -32,7 +32,7 @@ protected:
 	virtual void InternalServerTryActivateAbility(FGameplayAbilitySpecHandle AbilityToActivate, bool InputPressed, const FPredictionKey& PredictionKey, const FGameplayEventData* TriggerEventData) override;
 
 	//processing for ability rejected
-	void ServerTryActivateAbilityRejected(FGameplayAbilitySpecHandle Handle, const FGameplayEventData* EventData);
+	void ServerTryActivateAbilityRejected(FGameplayAbilitySpecHandle Handle, const FGameplayEventData* EventData,const FPredictionKey& PredictionKey);
 
 	
 	virtual void ClientActivateAbilitySucceedWithEventData_Implementation(FGameplayAbilitySpecHandle AbilityToActivate, FPredictionKey PredictionKey, FGameplayEventData TriggerEventData) override;

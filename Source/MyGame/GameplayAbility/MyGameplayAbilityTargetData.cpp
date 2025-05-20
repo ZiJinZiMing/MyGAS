@@ -9,5 +9,6 @@ bool FGameplayAbilityTargetData_ActionValidator::NetSerialize(FArchive& Ar, clas
 	bOutSuccess = true;
 	Ar << ActionIndex;
 	Ar << ActionStep;
+	Ar << EffectIndex;
 	return bOutSuccess;
 }

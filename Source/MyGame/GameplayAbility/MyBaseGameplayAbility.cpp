@@ -24,11 +24,6 @@ void UMyBaseGameplayAbility::OnClientActivateAbilityCaughtUp_Implementation() co
 	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("OnClientActivateAbilityCaughtUp: %s"), *GetName()));
 }
 
-
-void UMyBaseGameplayAbility::OnActivateAbilityRejected_Implementation(const FGameplayAbilityActorInfo& ActorInfo, const FGameplayEventData& EventData)
-{
-}
-
 void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                              const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -42,7 +37,8 @@ void UMyBaseGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	}
 }
 
-
-
-
-
+void UMyBaseGameplayAbility::ActivateAbilityRejected(const FGameplayAbilityActorInfo& ActorInfo, const FGameplayEventData& EventData, const FPredictionKey& PredictionKey)
+{
+	UKismetSystemLibrary::PrintString(ActorInfo.AvatarActor.Get(), FString::Printf(TEXT("ActivateAbilityRejected: PredictionKey：%s"), *PredictionKey.ToString()));
+	OnActivateAbilityRejected(ActorInfo, EventData);
+}

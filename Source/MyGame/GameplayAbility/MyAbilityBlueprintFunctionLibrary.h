@@ -18,12 +18,12 @@ class MYGAME_API UMyAbilityBlueprintFunctionLibrary : public UBlueprintFunctionL
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable)
-	static bool GetActionValidatorDataFromTargetData(FGameplayAbilityTargetDataHandle Handle, int& ActionIndex, int& ActionStep);
+	UFUNCTION(BlueprintPure)
+	static bool GetActionValidatorDataFromTargetData(FGameplayAbilityTargetDataHandle Handle, int& ActionIndex, int& ActionStep, int& EffectIndex);
 
-	UFUNCTION(BlueprintCallable)
-	static FGameplayAbilityTargetDataHandle MakeActionValidatorTargetData(int ActionIndex, int ActionStep);
+	UFUNCTION(BlueprintPure)
+	static FGameplayAbilityTargetDataHandle MakeActionValidatorTargetData(int ActionIndex, int ActionStep, int EffectIndex);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	static bool IsForRemoteClient(const FGameplayAbilityActorInfo& ActorInfo);
 };

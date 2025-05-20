@@ -8,6 +8,7 @@
 #include "MyBaseGameplayAbility.h"
 #include "MyGameplayAbilityTargetData.h"
 #include "MyGameplayAbilityTypes.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 DECLARE_CYCLE_STAT(TEXT("AbilitySystemComp ServerTryActivate"), STAT_AbilitySystemComp_ServerTryActivate, STATGROUP_AbilitySystem);
 
@@ -100,7 +101,7 @@ void UMyAbilitySystemComponent::InternalServerTryActivateAbility(FGameplayAbilit
 		Spec->InputPressed = false;
 
 		//ZhangJinming Modifier, processing for ability rejected
-		ServerTryActivateAbilityRejected(Handle, TriggerEventData);
+		ServerTryActivateAbilityRejected(Handle, TriggerEventData, PredictionKey);
 		//ZhangJinming Modifier
 		
 		MarkAbilitySpecDirty(*Spec);
@@ -108,7 +109,7 @@ void UMyAbilitySystemComponent::InternalServerTryActivateAbility(FGameplayAbilit
 #endif
 }
 
-void UMyAbilitySystemComponent::ServerTryActivateAbilityRejected(FGameplayAbilitySpecHandle Handle, const FGameplayEventData* EventData)
+void UMyAbilitySystemComponent::ServerTryActivateAbilityRejected(FGameplayAbilitySpecHandle Handle, const FGameplayEventData* EventData,const FPredictionKey& PredictionKey)
 {
 	FGameplayAbilitySpec* Spec = FindAbilitySpecFromHandle(Handle);
 	if (!Spec)
@@ -163,7 +164,10 @@ bool UMyAbilitySystemComponent::TryActivateAbilityByClassWithTargetData(TSubclas
 		if (Spec.Ability.Get() == InAbilityCDO)
 		{
 			//保持和SendGameplayEventToActor中逻辑一致,
-			FScopedPredictionWindow NewScopedWindow(this, true);
+			// FScopedPredictionWindow NewScopedWindow(this, true);
+
+			// UKismetSystemLibrary::PrintString(this,FString::Printf(TEXT("TryActivateAbilityByClassWithTargetData|Key:%s"),*ScopedPredictionKey.ToString()));
+			
 			FGameplayEventData EventData;
 			EventData.EventTag = UE::MyGAS::Tag_TryActivateAbility;
 			// EventData.EventTag = FGameplayTag::EmptyTag;

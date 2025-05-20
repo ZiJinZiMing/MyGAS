@@ -20,6 +20,11 @@ struct FGameplayAbilityTargetData_ActionValidator : public FGameplayAbilityTarge
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int ActionStep;
 
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int EffectIndex;
+
+	
 	bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
 
 	virtual UScriptStruct* GetScriptStruct() const override
