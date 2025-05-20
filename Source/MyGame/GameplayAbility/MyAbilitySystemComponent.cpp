@@ -5,15 +5,14 @@
 
 #include "AbilitySystemLog.h"
 #include "AbilitySystemStats.h"
+#include "MyBaseGameplayAbility.h"
 #include "MyGameplayAbilityTargetData.h"
 #include "MyGameplayAbilityTypes.h"
-#include "Abilities/MyBaseGameplayAbility.h"
-#include "Context/AbilityContext.h"
-#include "Context/ContextGameplayAbility.h"
 
 DECLARE_CYCLE_STAT(TEXT("AbilitySystemComp ServerTryActivate"), STAT_AbilitySystemComp_ServerTryActivate, STATGROUP_AbilitySystem);
 
 #if !UE_BUILD_SHIPPING
+//可以使用extern关键字，使用引擎中隐藏的调试字段。参照GGameplayCamerasDebugEnable
 extern int32 DenyClientActivation = 0;
 /*static FAutoConsoleVariableRef CVarDenyClientActivation(
 TEXT("AbilitySystem.DenyClientActivations"),
@@ -136,34 +135,6 @@ void UMyAbilitySystemComponent::ServerTryActivateAbilityRejected(FGameplayAbilit
 		BaseAbility->OnActivateAbilityRejected(*ActorInfo, *EventData);
 	}
 	
-}
-
-bool UMyAbilitySystemComponent::TryActivateContextAbility(const TInstancedStruct<FAbilityContext>& Payload)
-{
-	const FAbilityContext& AbilityContext = Payload.Get<FAbilityContext>();
-	UContextGameplayAbility* InAbilityCDO = AbilityContext.AbilityClass.GetDefaultObject();
-
-	for (const FGameplayAbilitySpec& Spec : ActivatableAbilities.Items)
-	{
-		if (Spec.Ability.Get() == InAbilityCDO)
-		{
-			// bSuccess |= TryActivateAbility(Spec.Handle, bAllowRemoteActivation);
-			FScopedPredictionWindow NewScopedWindow(this, true);
-
-
-			
-			FGameplayEventData EventData;
-			EventData.ContextHandle = MakeEffectContext();
-			FMyGameplayEffectContext* MyGEContext = static_cast<FMyGameplayEffectContext*>(EventData.ContextHandle.Get());
-
-			FGameplayAbilityTargetData_AbilityContext* TargetData = new FGameplayAbilityTargetData_AbilityContext();
-			TargetData->AbilityContext.InitializeAs(Payload.GetScriptStruct(), Payload.GetMemory());
-			MyGEContext->AddTargetData(TargetData);
-
-			return InternalTryActivateAbility(Spec.Handle, ScopedPredictionKey, nullptr, nullptr, &EventData);
-		}
-	}
-	return false;
 }
 
 bool UMyAbilitySystemComponent::TryActivateAbilityByClassWithPayload(TSubclassOf<UGameplayAbility> InAbilityToActivate, FGameplayEventData Payload)

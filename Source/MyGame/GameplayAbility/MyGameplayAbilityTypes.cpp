@@ -8,7 +8,6 @@
 
 namespace UE::MyGAS
 {
-
 	FGameplayTag Tag_TryActivateAbility;
 
 	struct FNativeGameplayTags : FGameplayTagNativeAdder
@@ -19,6 +18,7 @@ namespace UE::MyGAS
 		{
 			UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
 			Tag_TryActivateAbility = Manager.AddNativeGameplayTag(TEXT("Ability.TryActivateAbility"));
+			//todo:	可以考虑OnFilterGameplayTag从面板中隐藏Tag
 			// Manager.OnFilterGameplayTag
 		}
 

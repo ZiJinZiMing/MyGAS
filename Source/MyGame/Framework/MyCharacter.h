@@ -5,8 +5,6 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
-#include "MyGame/GameplayAbility/Context/AbilityContext.h"
-#include "StructUtils/InstancedStruct.h"
 #include "MyCharacter.generated.h"
 
 class UMyAbilitySystemComponent;
@@ -34,12 +32,6 @@ protected:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void OnAbilitySystemInitialized();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
-	TInstancedStruct<FAbilityContext> AbilityPayload;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
-	TInstancedStruct<FAbilityContext> AbilityPayload2;
 	
 private:
 	void InitAbilitySystem();

@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
-#include "Context/AbilityContext.h"
-#include "StructUtils/InstancedStruct.h"
 #include "MyAbilitySystemComponent.generated.h"
 
 
@@ -21,9 +19,6 @@ public:
 	UMyAbilitySystemComponent();
 
 public:
-
-	UFUNCTION(BlueprintCallable, Category = "Context Ability System")
-	bool TryActivateContextAbility(const TInstancedStruct<FAbilityContext>& Payload);
 
 	UFUNCTION(BlueprintCallable, Category = "Abilities")
 	bool TryActivateAbilityByClassWithPayload(TSubclassOf<UGameplayAbility> InAbilityToActivate, FGameplayEventData Payload);
